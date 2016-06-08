@@ -51,9 +51,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   |		my-controller/my-method	-> my_controller/my_method
  */
 $route['default_controller'] = 'home';
-//$route[rawurlencode('контакти')] = "contacts";
-//$route['(.*-.*)'] = "view_article/index/$1";
+
+
+$route['^(\w{2})$'] = $route['default_controller'];
+
+//$route[rawurlencode('новини').'/(:num)'] = "news/index/$1";
+
 $route['(:any)_(:num)'] = "view_article/index/$2";
-$route[rawurlencode('новини').'/(:num)'] = "news/index/$1";
+$route['(\w{2})/(:any)_(:num)'] = "view_article/index/$3";
+
+$route['^(\w{2})/(.*)$'] = '$2';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

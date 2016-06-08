@@ -80,9 +80,18 @@
                                     <li><a href="<?= base_url('admin/publish') ?>" <?= urldecode(uri_string()) == 'admin/publish' ? 'class="active"' : '' ?>><i class="fa fa-edit"></i> Publish</a></li>
                                     <li><a href="<?= base_url('admin/articles') ?>" <?= urldecode(uri_string()) == 'admin/articles' ? 'class="active"' : '' ?>><i class="fa fa-files-o"></i> Articles</a></li>
                                     <li><a href="<?= base_url('admin/categories') ?>" <?= urldecode(uri_string()) == 'admin/categories' ? 'class="active"' : '' ?>><i class="fa fa-list-alt"></i> Categories</a></li>
+                                    <li><a href="<?= base_url('admin/languages') ?>" <?= urldecode(uri_string()) == 'admin/languages' ? 'class="active"' : '' ?>><i class="fa fa-globe"></i> Languages</a></li>
                                     <li><a href="<?= base_url('admin/history') ?>" <?= urldecode(uri_string()) == 'admin/history' ? 'class="active"' : '' ?>><i class="fa fa-history"></i> History</a></li>
                                     <li><a href="<?= base_url('admin/filemanager') ?>" <?= urldecode(uri_string()) == 'admin/filemanager' ? 'class="active"' : '' ?>><i class="fa fa-file-code-o"></i> File Manager</a></li>
+                                    <li><a href="<?= base_url('admin/plugins') ?>" <?= urldecode(uri_string()) == 'admin/plugins' ? 'class="active"' : '' ?>><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Plugins</a></li>
                                 </ul>
+                                <hr>
+                                <span class="alert-admin">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Do not forget to change ENVIRONMENT in index.php to PRODUCTION! 
+                                </span>
+                                <span class="alert-admin">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Do not forget to set site domain in config.php -> base_url 
+                                </span>
                             </div>
                             <div class="col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2">
                             <?php } else { ?>

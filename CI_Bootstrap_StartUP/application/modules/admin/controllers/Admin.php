@@ -14,12 +14,13 @@ class Admin extends MX_Controller {
     private $thumb_width = 300;
     private $thumb_height = 300;
     private $username;
-    private $history = false;
+    private $history;
 
     //$data['links_pagination'] = pagination('admin/view_all', $rowscount, $this->num_rows, 3);
 
     public function __construct() {
         parent::__construct();
+        $this->history = $this->config->item('admin_history');
         $this->load->library(array('session', 'form_validation'));
         $this->load->helper(array('text', 'file', 'pagination', 'text', 'except_letters'));
         $this->load->Model('Admin_model');
@@ -61,7 +62,7 @@ class Admin extends MX_Controller {
         if ($id > 0 && $_POST == null) {
             $_POST = $this->Admin_model->getOneArticle($id);
         }
-        if ($id > 0) {
+        if ($id > 0 && !isset($_GET['to_lang'])) {
             $this->form_validation->set_rules('title', 'Title', 'trim|required');
         } else {
             $this->form_validation->set_rules('title', 'Title', 'trim|required|is_unique[articles.title]');
@@ -80,6 +81,9 @@ class Admin extends MX_Controller {
             if ($img['file_name'] != null) {
                 $_POST['image'] = $img['file_name'];
                 $_POST['thumb'] = $img['file_name'];
+            }
+            if (isset($_GET['to_lang'])) {
+                $id = 0;
             }
             $result = $this->Admin_model->setArticle($_POST, $id);
             if ($result === true) {
@@ -101,6 +105,7 @@ class Admin extends MX_Controller {
         $head['keywords'] = '';
         $data['id'] = $id;
         $data['categoiries'] = $this->Admin_model->getCategories();
+        $data['languages'] = $this->Admin_model->getLanguages();
         $this->load->view('_parts/header', $head);
         $this->load->view('publish', $data);
         $this->load->view('_parts/footer');
@@ -142,14 +147,58 @@ class Admin extends MX_Controller {
         } else {
             $orderby = null;
         }
-        $rowscount = $this->Admin_model->articlesCount($search, $category);
-        $data['articles'] = $this->Admin_model->getArticles($this->num_rows, $page, $search, $category, $orderby);
+        if (isset($_GET['language']) && $_GET['language'] != '0') {
+            $this->session->set_userdata('admin_lang_articles', $_GET['language']);
+        } elseif (isset($_GET['language']) && $_GET['language'] == '0') {
+            $this->session->unset_userdata('admin_lang_articles');
+        }
+        $data['articles_lang'] = $articles_lang = $this->session->userdata('admin_lang_articles');
+        $rowscount = $this->Admin_model->articlesCount($search, $category, $articles_lang);
+        $data['articles'] = $this->Admin_model->getArticles($this->num_rows, $page, $search, $category, $orderby, $articles_lang);
         $data['links_pagination'] = pagination('admin/articles', $rowscount, $this->num_rows, 3);
-        $data['categoiries'] = $this->Admin_model->getCategories();
+        $data['categoiries'] = $this->Admin_model->getCategories($articles_lang);
+        $data['languages'] = $this->Admin_model->getLanguages();
 
         $this->load->view('_parts/header', $head);
         $this->load->view('articles', $data);
         $this->load->view('_parts/footer');
+    }
+
+    public function languages() {
+        $this->login_check();
+        if (isset($_GET['delete'])) {
+            $result = $this->Admin_model->deleteLanguage($_GET['delete']);
+            if ($result == true) {
+                $this->saveHistory('Delete language id - ' . $_GET['delete']);
+                $this->session->set_flashdata('result_delete', 'Language is deleted!');
+            } else {
+                $this->session->set_flashdata('result_delete', 'Problem with language delete!');
+            }
+            redirect('admin/languages');
+        }
+        $data = array();
+        $head = array();
+        $head['title'] = 'Administration - Languages';
+        $head['description'] = '!';
+        $head['keywords'] = '';
+        $data['languages'] = $this->Admin_model->getLanguages();
+
+        $this->form_validation->set_rules('abbr', 'Abbrevation', 'trim|required|is_unique[languages.abbr]');
+        if ($this->form_validation->run($this)) {
+            $result = $this->Admin_model->setLanguage($_POST);
+            if ($result === true) {
+                $this->session->set_flashdata('result_add', 'Language is added!');
+                $this->saveHistory('Create language - ' . $_POST['abbr']);
+            } else {
+                $this->session->set_flashdata('result_add', 'Problem with language add!');
+            }
+            redirect('admin/languages');
+        }
+
+        $this->load->view('_parts/header', $head);
+        $this->load->view('languages', $data);
+        $this->load->view('_parts/footer');
+        $this->saveHistory('Go to languages');
     }
 
     public function categories() {
@@ -205,6 +254,20 @@ class Admin extends MX_Controller {
         $this->load->view('filemanager', $data);
         $this->load->view('_parts/footer');
         $this->saveHistory('Go to File Manager');
+    }
+
+    public function plugins() {
+        $this->login_check();
+        $data = array();
+        $head = array();
+        $head['title'] = 'Administration - PLugins';
+        $head['description'] = '!';
+        $head['keywords'] = '';
+
+        $this->load->view('_parts/header', $head);
+        $this->load->view('plugins', $data);
+        $this->load->view('_parts/footer');
+        $this->saveHistory('Go to Plugins');
     }
 
     public function history($page = 0) {

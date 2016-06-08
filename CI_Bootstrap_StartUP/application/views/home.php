@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <div class="container">
-    <h1>Test</h1>
+    <h1><?= lang('home') ?></h1>
 
     <?php
     foreach ($articles as $article) {

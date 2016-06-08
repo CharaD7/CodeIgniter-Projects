@@ -32,10 +32,15 @@ if (validation_errors()) {
         </script>
     </div>
     <div class="form-group">
-        <?php if (isset($_POST['thumb']) && $_POST['thumb'] != null) { ?>
+        <?php if (isset($_POST['image']) && $_POST['image'] != null) { ?>
             <p>Current image:</p>
-            <img src="<?= base_url('attachments/thumbs/' . $_POST['thumb']) ?>" class="img-responsive">
-        <?php } ?>
+            <img src="<?= base_url('attachments/images/' . $_POST['image']) ?>" class="img-responsive">
+            <?php if (isset($_GET['to_lang'])) { ?>
+                <input type="hidden" name="image" value="<?= $_POST['image'] ?>">
+                <?php
+            }
+        }
+        ?>
         <label for="userfile">Picture</label>
         <input type="file" id="userfile" name="userfile">
     </div>
@@ -44,6 +49,14 @@ if (validation_errors()) {
         <select class="selectpicker form-control show-tick show-menu-arrow" name="category">
             <?php foreach ($categoiries->result() as $categorie) { ?>
                 <option <?= isset($_POST['category']) && $_POST['category'] == $categorie->name ? 'selected=""' : '' ?> value="<?= $categorie->name ?>"><?= $categorie->name ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="userfile">Language</label>
+        <select class="selectpicker form-control show-tick show-menu-arrow" name="language">
+            <?php foreach ($languages->result() as $language) { ?>
+                <option <?= isset($_POST['language']) && !isset($_GET['to_lang']) && $_POST['language'] == $language->abbr || isset($_GET['to_lang']) && $_GET['to_lang'] == $language->abbr ? 'selected=""' : '' ?> value="<?= $language->abbr ?>"><?= $language->abbr ?></option>
             <?php } ?>
         </select>
     </div>

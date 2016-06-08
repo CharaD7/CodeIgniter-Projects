@@ -40,6 +40,7 @@ div.left-side ul.sidebar-menu li.search {padding-left:15px; padding-right: 15px;
 div.left-side ul.sidebar-menu li.search .left-finder {background-color: #2c363b; padding-left:5px; padding-right: 25px; width:100%; height:35px; margin-bottom:15px; border:0; border-radius: 4px;}
 div.left-side ul.sidebar-menu li.search form {position: relative;}
 div.left-side ul.sidebar-menu li.search form i {position: absolute; right:10px; top:10px;}
+div.left-side span.alert-admin {padding-left:10px; padding-right: 10px; padding-bottom: 10px; display: inline-block;}
 
 .custab{ border: 1px solid #ccc;  padding: 5px; box-shadow: 3px 3px 2px #ccc; transition: 0.5s; }
 .custab:hover{ box-shadow: 3px 3px 0px transparent; transition: 0.5s;}

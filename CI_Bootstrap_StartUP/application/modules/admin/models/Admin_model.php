@@ -17,7 +17,7 @@ class Admin_model extends CI_Model {
         return $res_arr;
     }
 
-    public function articlesCount($search = null, $category = null) {
+    public function articlesCount($search = null, $category = null, $lang = null) {
         if ($search !== null) {
             $search = $this->db->escape_like_str($search);
             $this->db->where("(title LIKE '%$search%' OR description LIKE '%$search%')");
@@ -25,7 +25,26 @@ class Admin_model extends CI_Model {
         if ($category !== null) {
             $this->db->where('category', $category);
         }
+        if ($lang != null) {
+            $this->db->where('language', $lang);
+        }
         return $this->db->count_all_results('articles');
+    }
+
+    public function getLanguages() {
+        $query = $this->db->query('SELECT * FROM languages');
+        return $query;
+    }
+
+    public function setLanguage($post) {
+        $result = $this->db->insert('languages', $post);
+        return $result;
+    }
+
+    public function deleteLanguage($id) {
+        $this->db->where('id', $id);
+        $result = $this->db->delete('languages');
+        return $result;
     }
 
     public function setArticle($post, $id = 0) {
@@ -61,7 +80,7 @@ class Admin_model extends CI_Model {
         return $query;
     }
 
-    public function getArticles($limit, $page, $search = null, $category = null, $orderby = null) {
+    public function getArticles($limit, $page, $search = null, $category = null, $orderby = null, $lang = null) {
         if ($search !== null) {
             $search = $this->db->escape_like_str($search);
             $this->db->where("(title LIKE '%$search%' OR description LIKE '%$search%')");
@@ -74,11 +93,17 @@ class Admin_model extends CI_Model {
         } else {
             $this->db->order_by('id', 'desc');
         }
+        if ($lang != null) {
+            $this->db->where('language', $lang);
+        }
         $query = $this->db->select('*')->get('articles', $limit, $page);
         return $query;
     }
 
-    public function getCategories() {
+    public function getCategories($lang = null) {
+        if ($lang != null) {
+            $where = " AND language = '$lang'";
+        }
         $query = $this->db->query('SELECT categories.*, (SELECT COUNT(id) FROM articles WHERE articles.category = name) as num FROM `categories` ORDER BY `id` DESC ');
         return $query;
     }

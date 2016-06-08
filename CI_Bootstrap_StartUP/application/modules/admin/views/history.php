@@ -1,7 +1,7 @@
 <h1>History</h1>
 <hr>
 <?php if ($history === false) { ?>
-    <div class="alert alert-danger">History is stopped! Go to controller and set <b>$history</b> property to <b>TRUE</b></div>
+    <div class="alert alert-danger">History is stopped! Go to config.php and set <b>admin_history</b> to <b>TRUE</b></div>
 <?php } ?>
 <div class="table-responsive">
     <table class="table table-condensed table-bordered table-striped custab">
