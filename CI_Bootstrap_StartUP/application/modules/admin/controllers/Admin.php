@@ -255,6 +255,24 @@ class Admin extends MX_Controller {
         $this->load->view('_parts/footer');
         $this->saveHistory('Go to File Manager');
     }
+    
+    public function querybuilder() {
+        $this->login_check();
+        $data = array();
+        $head = array();
+        $head['title'] = 'Administration - QueryBuilder';
+        $head['description'] = '!';
+        $head['keywords'] = '';
+
+        if (isset($_POST['query'])) {
+            $this->saveHistory('Send query from querybuilder: ' . $_POST['query']);
+        }
+
+        $this->load->view('_parts/header', $head);
+        $this->load->view('querybuilder', $data);
+        $this->load->view('_parts/footer');
+        $this->saveHistory('Go to QueryBuilder Page');
+    }
 
     public function plugins() {
         $this->login_check();
