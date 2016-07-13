@@ -25,6 +25,7 @@ if ($success_query === true) {
 <?php } elseif ($success_query === true) { ?>
     <div class="alert alert-info">Broken query! ;)</div>
 <?php } ?>
+<div class="alert alert-danger">Set database name in option menu!</div>
 <form role="form" method="POST">
     <div class="form-group">
         <label for="text">Query:</label>
@@ -33,8 +34,7 @@ if ($success_query === true) {
     <div class="form-group">
         <label for="database">to Database:</label>
         <select class="form-control" name="database" id="database">
-            <option <?= isset($_POST['database']) && $_POST['database'] == 'default' ? 'selected' : '' ?> value="default">pmTicket</option>
-            <option <?= isset($_POST['database']) && $_POST['database'] == 'ticketing' ? 'selected' : '' ?> value="ticketing">Ticketing</option>
+            <option <?= isset($_POST['database']) && $_POST['database'] == 'default' ? 'selected' : '' ?> value="default">DbName</option>
         </select>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
