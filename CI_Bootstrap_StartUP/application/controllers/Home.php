@@ -17,7 +17,7 @@ class Home extends MY_Controller {
         $head['title'] = 'Title information‎';
         $head['description'] = 'Description info';
         $head['keywords'] = 'key,words,for,seo';
-        $data['articles'] = $this->Articles_model->getArticles('test1', $this->my_lang);
+        $data['articles'] = $this->Articles_model->getArticles('test', $this->my_lang);
         /* Pagination
           $rowscount = $this->Articles_model->articlesCount('blog');
           $data['news'] = $this->Articles_model->get_all($this->num_rows, $page);

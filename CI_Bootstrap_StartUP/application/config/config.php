@@ -86,8 +86,9 @@ $config['admin_history'] = false;
   | than english.
   |
  */
-$config['language'] = 'english';
-$config['language_abbr'] = 'en';
+$config['language'] = 'bulgarian';
+$config['language_abbr'] = 'bg';
+$config['currency'] = 'лв';
 
 /*
   |--------------------------------------------------------------------------

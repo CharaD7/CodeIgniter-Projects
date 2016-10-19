@@ -1,3 +1,2 @@
-<?php
-
-$lang['home'] = 'Home';
+<?php 
+$lang['home'] = 'Home12';

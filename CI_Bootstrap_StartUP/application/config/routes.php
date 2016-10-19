@@ -55,10 +55,12 @@ $route['default_controller'] = 'home';
 
 $route['^(\w{2})$'] = $route['default_controller'];
 
-//$route[rawurlencode('новини').'/(:num)'] = "news/index/$1";
+$route['jsloader/(:any)'] = "JSLoader/file/$1";
 
 $route['(:any)_(:num)'] = "view_article/index/$2";
 $route['(\w{2})/(:any)_(:num)'] = "view_article/index/$3";
+
+$route['article_(:num)'] = "home/viewProduct/$3";
 
 $route['^(\w{2})/(.*)$'] = '$2';
 

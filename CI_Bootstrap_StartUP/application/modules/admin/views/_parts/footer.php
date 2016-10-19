@@ -8,6 +8,7 @@
 </div>
 <script src="<?= base_url('assets/bootstrap-select-1.9.4/js/bootstrap-select.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/bootbox.min.js') ?>"></script>
 <script>
     if ($(window).width() > 767) {
         var left_side_width = $('.left-side').width();
@@ -20,10 +21,10 @@
         }
     });
     $(document).ready(function () {
-        $("i.fa.fa-cogs").click(function () {
+        $(".h-settings").click(function () {
             $(".settings").toggle("slow", function () {
                 $("i.fa.fa-cogs").addClass('fa-spin');
-                if ($(this).is(':visible')) {
+                if ($(".settings").is(':visible')) {
                     $("i.fa.fa-cogs").addClass('fa-spin');
                 } else {
                     $("i.fa.fa-cogs").removeClass('fa-spin');
@@ -49,6 +50,57 @@
             alert('Too short pass!');
         }
     }
+    $("#dev-zone").click(function () {
+        $(".toggle-dev").slideToggle("slow");
+    });
+
+    $("a.confirm-delete").click(function (e) {
+        e.preventDefault();
+        var lHref = $(this).attr('href');
+        bootbox.confirm({
+            message: "Are you sure want to delete?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    window.location.href = lHref;
+                }
+            }
+        });
+    });
+    $("a.confirm-save").click(function (e) {
+        e.preventDefault();
+        var formId = $(this).data('form-id');
+        bootbox.confirm({
+            message: "Are you sure want to save?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    document.getElementById(formId).submit();
+                }
+            }
+        });
+    });
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 </body>
 </html>
