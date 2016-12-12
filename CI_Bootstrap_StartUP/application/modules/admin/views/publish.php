@@ -113,7 +113,7 @@ if ($this->session->flashdata('result_publish')) {
         <label>Categories</label>
         <select class="selectpicker form-control show-tick show-menu-arrow" name="category">
             <?php foreach ($categories->result() as $categorie) { ?>
-                <option <?= isset($_POST['categorie']) && $_POST['categorie'] == $categorie->name ? 'selected=""' : '' ?> value="<?= $categorie->name ?>"><?= $categorie->name ?></option>
+                <option <?= isset($_POST['category']) && $_POST['category'] == $categorie->name ? 'selected=""' : '' ?> value="<?= $categorie->name ?>"><?= $categorie->name ?></option>
             <?php } ?>
         </select>
     </div>
