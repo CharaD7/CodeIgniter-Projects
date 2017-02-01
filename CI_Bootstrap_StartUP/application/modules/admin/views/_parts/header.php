@@ -30,22 +30,29 @@
                         <div id="navbar" class="collapse navbar-collapse">
                             <ul class="nav navbar-nav">
                                 <li><a href="<?= base_url('admin') ?>"><i class="fa fa-home"></i> Home</a></li>
-                                <li><a href="<?= base_url() ?>" target="_blank"><i class="glyphicon glyphicon-star"></i> Open site</a></li>
+                                <li><a href="<?= base_url() ?>" target="_blank"><i class="glyphicon glyphicon-star"></i> Production</a></li>
                                 <li>
-                                    <a href="javascript:void(0);" style="margin-left:-10px;" class="h-settings"><i class="fa fa-lg fa-cogs"></i> Settings</a>
+                                    <a href="javascript:void(0);" class="h-settings"><i class="fa fa-key" aria-hidden="true"></i> Pass Change</a>
                                     <div class="relative">
                                         <div class="settings">
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading">
-                                                    <div class="panel-title">Settings</div>
+                                                    <div class="panel-title">Security</div>
                                                 </div>     
                                                 <div class="panel-body">
                                                     <label>Change my password</label> <span class="bg-success" id="pass_result">Changed!</span>
                                                     <form class="form-inline" role="form">
                                                         <div class="form-group">
-                                                            <input type="text" class="form-control" placeholder="New password" name="new_pass">
+                                                            <input type="text" class="form-control new-pass-field" placeholder="New password" name="new_pass">
                                                         </div>
                                                         <a href="javascript:void(0);" onclick="changePass()" class="btn btn-sm btn-primary">Update</a>
+                                                        <hr>
+                                                        <span>Password Strength:</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-default generate-pwd">Generate Password</button> 
                                                     </form>
                                                 </div>
                                             </div>
@@ -78,10 +85,11 @@
                                             </form>
                                         </div>
                                     </li>
-                                    <li class="header">BLOG</li>
+                                    <li class="header">PUBLISHER</li>
                                     <li><a href="<?= base_url('admin/publish') ?>" <?= urldecode(uri_string()) == 'admin/publish' ? 'class="active"' : '' ?>><i class="fa fa-edit"></i> Publish</a></li>
                                     <li><a href="<?= base_url('admin/articles') ?>" <?= urldecode(uri_string()) == 'admin/articles' ? 'class="active"' : '' ?>><i class="fa fa-files-o"></i> Articles</a></li>
                                     <li><a href="<?= base_url('admin/categories') ?>" <?= urldecode(uri_string()) == 'admin/categories' ? 'class="active"' : '' ?>><i class="fa fa-list-alt"></i> Categories</a></li>
+                                    <li><a href="<?= base_url('admin/texts') ?>" <?= urldecode(uri_string()) == 'admin/texts' ? 'class="active"' : '' ?>><i class="fa fa-text-width" aria-hidden="true"></i> Value Store</a></li>
                                     <li class="header">SETTINGS</li>
                                     <li><a href="<?= base_url('admin/languages') ?>" <?= urldecode(uri_string()) == 'admin/languages' ? 'class="active"' : '' ?>><i class="fa fa-globe"></i> Languages</a></li>
                                     <li><a href="<?= base_url('admin/history') ?>" <?= urldecode(uri_string()) == 'admin/history' ? 'class="active"' : '' ?>><i class="fa fa-history"></i> History</a></li>

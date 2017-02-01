@@ -27,28 +27,7 @@ if ($this->session->flashdata('result_publish')) {
             <input type="text" name="title[]" value="<?= $trans_load != null && isset($trans_load[$language->abbr]['title']) ? $trans_load[$language->abbr]['title'] : '' ?>" class="form-control">
         </div>
         <?php
-    } $i = 0;
-    ?>
-    <div class="form-group">
-        <a href="javascript:void(0);" class="btn btn-default" id="showSliderDescrption">Show Slider Description <span class="glyphicon glyphicon-circle-arrow-down"></span></a>
-    </div>
-    <div id="theSliderDescrption" <?= isset($_POST['in_slider']) && $_POST['in_slider'] == 1 ? 'style="display:block;"' : '' ?>>
-        <?php
-        foreach ($languages->result() as $language) {
-            ?>
-            <div class="form-group">
-                <label for="basic_description<?= $i ?>">Slider Description (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">)</label>
-                <textarea name="basic_description[]" id="basic_description<?= $i ?>" rows="50" class="form-control"><?= $trans_load != null && isset($trans_load[$language->abbr]['basic_description']) ? $trans_load[$language->abbr]['basic_description'] : '' ?></textarea>
-                <script>
-                    CKEDITOR.replace('basic_description<?= $i ?>');
-                </script>
-            </div>
-            <?php
-            $i++;
-        }
-        ?> 
-    </div>
-    <?php
+    }
     $i = 0;
     foreach ($languages->result() as $language) {
         ?>
@@ -112,8 +91,16 @@ if ($this->session->flashdata('result_publish')) {
     <div class="form-group for-shop">
         <label>Categories</label>
         <select class="selectpicker form-control show-tick show-menu-arrow" name="category">
-            <?php foreach ($categories->result() as $categorie) { ?>
-                <option <?= isset($_POST['category']) && $_POST['category'] == $categorie->name ? 'selected=""' : '' ?> value="<?= $categorie->name ?>"><?= $categorie->name ?></option>
+            <?php foreach ($categories as $key_cat => $categorie) { ?>
+                <option <?= isset($_POST['categorie']) && $_POST['categorie'] == $key_cat ? 'selected=""' : '' ?> value="<?= $key_cat ?>">
+                    <?php
+                    foreach ($categorie['info'] as $nameAbbr) {
+                        if ($nameAbbr['abbr'] == $this->config->item('language_abbr')) {
+                            echo $nameAbbr['name'];
+                        }
+                    }
+                    ?>
+                </option>
             <?php } ?>
         </select>
     </div>

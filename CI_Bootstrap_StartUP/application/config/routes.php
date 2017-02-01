@@ -64,5 +64,42 @@ $route['article_(:num)'] = "home/viewProduct/$3";
 
 $route['^(\w{2})/(.*)$'] = '$2';
 
+// Category url name
+$route[rawurlencode('категория') . '/(:any)'] = "home/category/$1";
+$route[rawurlencode('категория') . '/(:any)/(:any)'] = "home/category/$1/$2";
+
+// Search
+$route[rawurlencode('търсене-за') . ''] = "home/search/$1";
+$route[rawurlencode('търсене-за') . '/(:num)'] = "home/search/$1";
+
+// About Us
+$route[rawurlencode('за-нас')] = "aboutus";
+
+// ADMIN LOGIN/LOGOUT
+$route['admin'] = "admin/home/login";
+$route['admin/logout'] = "admin/home/home/logout";
+// PUBLISHER GROUP
+$route['admin/publish'] = "admin/publisher/publish";
+$route['admin/publish/(:num)'] = "admin/publisher/publish/index/$1";
+$route['admin/articles'] = "admin/publisher/articles";
+$route['admin/articles/(:num)'] = "admin/publisher/articles/index/$1";
+$route['admin/categories'] = "admin/publisher/categories";
+$route['admin/categories/(:num)'] = "admin/publisher/categories/index/$1";
+$route['admin/texts'] = "admin/publisher/texts";
+$route['admin/texts/(:num)'] = "admin/publisher/texts/index/$1";
+
+// SETTINGS GROUP
+$route['admin/languages'] = "admin/advanced_settings/languages";
+$route['admin/history'] = "admin/advanced_settings/history";
+$route['admin/history/(:num)'] = "admin/advanced_settings/history/index/$1";
+$route['admin/filemanager'] = "admin/advanced_settings/filemanager";
+$route['admin/adminusers'] = "admin/advanced_settings/adminusers";
+
+// AJAX CALLED
+$route['admin/changePass'] = "admin/home/home/changePass";
+$route['admin/articlestatusChange'] = "admin/publisher/articles/articlestatusChange";
+$route['admin/editcategorie'] = "admin/publisher/categories/editCategorie";
+$route['admin/changeNavVisibility'] = "admin/publisher/categories/changeNavVisibility";
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

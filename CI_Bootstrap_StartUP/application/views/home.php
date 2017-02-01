@@ -7,6 +7,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <?php
     foreach ($articles as $article) {
         ?>
-        <div><a href="<?= $lang_url . '/' . $article['url'] ?>"><?= $article['title'] ?></a></div>
+        <div><a href="<?= $article['url'] ?>"><?= $article['title'] ?></a></div>
     <?php } ?>
 </div>

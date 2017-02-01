@@ -1,5 +1,5 @@
 <div id="languages">
-    <h1>Languages</h1> 
+    <h1><img src="<?= base_url('assets/imgs/small-globe.png') ?>" class="header-img" style="margin-top:-3px;"> Languages</h1> 
     <hr>
     <?php
     if (isset($writable)) {
@@ -54,7 +54,7 @@
                     <td><?= ucfirst($language->name) ?></td>
                     <td><?= $language->currency ?></td>
                     <td class="text-center">
-                        <?php if ($def_lang != $language->abbr) { ?>
+                        <?php if (MY_DEFAULT_LANGUAGE_ABBR != $language->abbr) { ?>
                             <a href="<?= base_url('admin/languages/?delete=' . $language->id) ?>" class="btn btn-danger btn-xs confirm-delete"><span class="glyphicon glyphicon-remove"></span> Delete</a>
                         <?php } else { ?>
                             Its default
@@ -83,6 +83,7 @@
             <div class="alert alert-info"><span class="glyphicon glyphicon-alert"></span> Now you edit language: <b><?= ucfirst($_GET['editLang']) ?></b></div>
             <?php
             $o = 1;
+            $countValuesForEdit = 0;
             foreach ($arrPhpFiles as $phpFile => $langFinal) {
                 if (!empty($langFinal)) {
                     foreach ($langFinal as $key => $val) {
@@ -95,6 +96,7 @@
                         </div>
                         <?php
                         $o++;
+                        $countValuesForEdit++;
                     }
                 }
             }
@@ -112,10 +114,20 @@
                     <?php
                     $i++;
                     $o++;
+                    $countValuesForEdit++;
                 }
             }
-            ?>
-            <a href="javascript:void(0);" data-form-id="saveLang" style="margin-left: 10px;" class="btn btn-lg btn-info confirm-save">Save me</a>
+            if ($countValuesForEdit * 6 > $max_input_vars) {
+                ?>
+                <div class="alert alert-danger">
+                    You can't edit this language because the
+                    server have restriction for <b>max_input_vars</b>, it must be more than
+                    <b><?= $countValuesForEdit * 6 ?></b> and now is <b><?= $max_input_vars ?></b>.<br>
+                    Please contact your system administrator.
+                </div>
+            <?php } else { ?>
+                <a href="javascript:void(0);" data-form-id="saveLang" style="margin-left: 10px;" class="btn btn-lg btn-info confirm-save">Save me</a>
+            <?php } ?>
             <a href="<?= base_url('admin/languages') ?>" class="btn btn-lg btn-default">Cancel</a>
         </form>
         <?php
@@ -143,6 +155,17 @@
                         <div class="form-group">
                             <label for="currency">Currency</label>
                             <input type="text" name="currency" class="form-control" id="currency">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Currency key:</label>
+                            <select class="selectpicker form-control" data-live-search="true" name="currencyKey">
+                                <?php
+                                $curr = currencies();
+                                foreach ($curr as $key => $val) {
+                                    ?>
+                                    <option value="<?= $key ?>"><?= $key ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <input type="file" name="userfile"">

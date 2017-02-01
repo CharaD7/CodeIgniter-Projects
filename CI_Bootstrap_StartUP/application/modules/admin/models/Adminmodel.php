@@ -1,6 +1,6 @@
 <?php
 
-class Admin_model extends CI_Model
+class AdminModel extends CI_Model
 {
 
     private $def_lang;
@@ -138,7 +138,6 @@ class Admin_model extends CI_Model
             $post['title'][$i] = str_replace('"', "'", $post['title'][$i]);
             $arr = array(
                 'title' => $post['title'][$i],
-                'basic_description' => $post['basic_description'][$i],
                 'description' => $post['description'][$i],
                 'abbr' => $abbr,
                 'for_id' => $id,
@@ -162,7 +161,6 @@ class Admin_model extends CI_Model
         $arr = array();
         foreach ($query->result() as $row) {
             $arr[$row->abbr]['title'] = $row->title;
-            $arr[$row->abbr]['basic_description'] = $row->basic_description;
             $arr[$row->abbr]['description'] = $row->description;
         }
         return $arr;
@@ -199,17 +197,28 @@ class Admin_model extends CI_Model
         $this->db->join('translations', 'translations.for_id = articles.id', 'left');
         $this->db->where('translations.type', 'article');
         $this->db->where('translations.abbr', $this->def_lang);
-        $query = $this->db->select('articles.*, translations.title, translations.description, translations.abbr, articles.url, translations.for_id, translations.type, translations.basic_description')->get('articles', $limit, $page);
+        $query = $this->db->select('articles.*, translations.title, translations.description, translations.abbr, articles.url, translations.for_id, translations.type')->get('articles', $limit, $page);
         return $query;
     }
 
-    public function getCategories($lang = null)
+    public function getCategories($limit = null, $start = null)
     {
-        if ($lang != null) {
-            $where = " AND language = '$lang'";
+        $limit_sql = '';
+        if ($limit !== null && $start !== null) {
+            $limit_sql = ' LIMIT ' . $start . ',' . $limit;
         }
-        $query = $this->db->query('SELECT categories.*, (SELECT COUNT(id) FROM articles WHERE articles.category = name) as num FROM `categories` ORDER BY `id` DESC ');
-        return $query;
+
+        $query = $this->db->query('SELECT translations_first.*, (SELECT name FROM translations WHERE for_id = sub_for AND type="categorie" AND abbr = translations_first.abbr) as sub_is, categories.id as cat_id FROM translations as translations_first INNER JOIN categories ON categories.id = translations_first.for_id WHERE type="categorie"' . $limit_sql);
+        $arr = array();
+        foreach ($query->result() as $categorie) {
+            $arr[$categorie->for_id]['info'][] = array(
+                'abbr' => $categorie->abbr,
+                'name' => $categorie->name
+            );
+            $arr[$categorie->for_id]['sub'][] = $categorie->sub_is;
+            $arr[$categorie->for_id]['id'] = $categorie->cat_id;
+        }
+        return $arr;
     }
 
     public function getOneArticle($id)
@@ -225,26 +234,23 @@ class Admin_model extends CI_Model
 
     public function setCategorie($post)
     {
-        $id = $post['id'];
-        unset($post['id']);
-        if ($id == 0) {
-            $result = $this->db->insert('categories', $post);
-        } else {
-            if (isset($post['rename_all'])) {
-                $this->db->where('category', $post['rename_all']);
-                unset($post['rename_all']);
-                $this->db->update('articles', array('category' => $post['name']));
-            }
-            $this->db->where('id', $id);
-            $result = $this->db->update('categories', $post);
-        }
-        return $result;
-    }
+        $this->db->insert('categories', array(
+            'sub_for' => $post['sub_for'],
+            'nav' => $post['nav'],
+            'name' => $post['name']
+        ));
+        $id = $this->db->insert_id();
 
-    public function deleteCategorie($id)
-    {
-        $this->db->where('id', $id);
-        $result = $this->db->delete('categories');
+        $i = 0;
+        foreach ($post['translations'] as $abbr) {
+            $arr = array();
+            $arr['abbr'] = $abbr;
+            $arr['type'] = 'categorie';
+            $arr['name'] = $post['categorie_name'][$i];
+            $arr['for_id'] = $id;
+            $result = $this->db->insert('translations', $arr);
+            $i++;
+        }
         return $result;
     }
 
@@ -263,7 +269,7 @@ class Admin_model extends CI_Model
         $this->db->delete('translations');
     }
 
-    public function articleStatusChagne($id, $to_status)
+    public function articleStatusChange($id, $to_status)
     {
         $this->db->where('id', $id);
         $result = $this->db->update('articles', array('visibility' => $to_status));
@@ -275,6 +281,98 @@ class Admin_model extends CI_Model
         $this->db->where('username', $username);
         $result = $this->db->update('users', array('password' => md5($new_pass)));
         return $result;
+    }
+
+    public function valueStoresCount()
+    {
+        return $this->db->count_all_results('value_store');
+    }
+
+    public function getValueStores($limit = null, $page = null)
+    {
+        if ($limit !== null && $page !== null) {
+            $this->db->limit($limit, $page);
+        }
+        $result = $this->db->get('value_store');
+        return $result->result_array();
+    }
+
+    public function setValueStore($key, $value, $update)
+    {
+        $this->db->where('my_key', $key);
+        $query = $this->db->get('value_store');
+        if ($query->num_rows() > 0 && $update > 0) {
+            $this->db->where('my_key', $key);
+            $this->db->update('value_store', array('value' => $value));
+        } elseif ($query->num_rows() > 0 && $update == 0) {
+            return false;
+        } else {
+            $key = trim($key);
+            $key = preg_replace("/[^a-zA-Z0-9]+/", '', $key);
+            $this->db->insert('value_store', array('value' => $value, 'my_key' => $key));
+        }
+        return true;
+    }
+
+    public function deleteValueStore($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('value_store');
+    }
+
+    public function getOneValueStore($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->get('value_store');
+        return $query->row_array();
+    }
+
+    public function categoriesCount()
+    {
+        return $this->db->count_all_results('categories');
+    }
+
+    public function editCategorieSub($post)
+    {
+        if ($post['editSubId'] != $post['newSubIs']) {
+            $this->db->where('id', $post['editSubId']);
+            $result = $this->db->update('categories', array(
+                'sub_for' => $post['newSubIs']
+            ));
+        } else {
+            $result = false;
+        }
+        return $result;
+    }
+
+    public function editCategorie($post)
+    {
+        $this->db->where('abbr', $post['abbr']);
+        $this->db->where('for_id', $post['for_id']);
+        $this->db->where('type', $post['type']);
+        $this->db->update('translations', array(
+            'name' => $post['name']
+        ));
+    }
+
+    public function deleteCategorie($id)
+    {
+        $this->db->where('for_id', $id);
+        $this->db->where('type', 'categories');
+        $this->db->delete('translations');
+
+        $this->db->where('id', $id);
+        $this->db->or_where('sub_for', $id);
+        $result = $this->db->delete('categories');
+        return $result;
+    }
+
+    public function changeNavVisiblity($post)
+    {
+        $this->db->where('id', $post['id']);
+        $this->db->update('categories', array(
+            'nav' => $post['nav']
+        ));
     }
 
 }

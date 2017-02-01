@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->my_lang ?>">
+<html lang="<?= MY_LANGUAGE_ABBR ?>">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
