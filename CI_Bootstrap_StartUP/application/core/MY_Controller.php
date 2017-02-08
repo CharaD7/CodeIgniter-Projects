@@ -25,7 +25,7 @@ class MY_Controller extends MX_Controller
                 $vars[$valueStore['my_key']] = $valueStore['value'];
             }
         }
-        return $vars;
+        $this->load->vars($vars);
     }
 
 }
